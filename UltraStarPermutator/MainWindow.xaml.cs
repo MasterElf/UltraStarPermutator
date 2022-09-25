@@ -64,7 +64,7 @@ namespace UltraStarPermutator
         {
             if (projectModel != null)
             {
-
+                PermutationCreator.Create(projectModel);
             }
         }
     }
