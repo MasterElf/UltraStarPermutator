@@ -10,6 +10,7 @@
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <Button Content="Load..." Click="LoadButton_Click" />
             <Button Content="Save..." Click="SaveButton_Click" />
+            <Button Content="Execute" Click="ExecuteButton_Click" />
         </StackPanel>
 
         <local:ProjectControl />

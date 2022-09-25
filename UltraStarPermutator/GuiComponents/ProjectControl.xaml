@@ -18,7 +18,13 @@
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
                 <Button Content="Add part" Click="AddPartButton_Click" />
             </StackPanel>
-        
+
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <TextBlock Text="Target folder: " />
+                <TextBox Text="{Binding TagetFolder}" />
+                <Button Content="Find..." Click="SetTargetFolderButton_Click" />
+            </StackPanel>
+
             <ListView ItemsSource="{Binding Parts}">
                 <ListView.ItemTemplate>
                     <DataTemplate DataType="local:PartModel">

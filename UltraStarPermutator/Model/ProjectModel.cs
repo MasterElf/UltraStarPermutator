@@ -17,6 +17,14 @@ namespace UltraStarPermutator
             set => SetProperty(ref name, value);
         }
 
+        private string? tagetFolder;
+
+        public string? TagetFolder
+        {
+            get => tagetFolder;
+            set => SetProperty(ref tagetFolder, value);
+        }
+
         [XmlIgnore]
         public ObservableCollection<PartModel> Parts { get; private set; } = new ObservableCollection<PartModel>();
 

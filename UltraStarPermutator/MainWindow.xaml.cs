@@ -59,5 +59,13 @@ namespace UltraStarPermutator
                 }
             }
         }
+
+        private void ExecuteButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (projectModel != null)
+            {
+
+            }
+        }
     }
 }
