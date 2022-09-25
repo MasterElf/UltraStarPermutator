@@ -8,8 +8,29 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <GroupBox>
         <GroupBox.Header>
-            <TextBox Text="{Binding Name}" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Part name: " />
+                <TextBox Text="{Binding Name}" />
+            </StackPanel>
         </GroupBox.Header>
-            
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+                <Button Content="Add audio" Click="AddAudioButton_Click" />
+            </StackPanel>
+
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <TextBlock Text="Part file path" />
+                <TextBox Text="{Binding FilePath}" />
+                <Button Content="Find..." Click="FindPartButton_Click" />
+            </StackPanel>
+
+            <ListView ItemsSource="{Binding AudioTracks}">
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="local:AudioModel">
+                        <local:AudioControl />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </DockPanel>
     </GroupBox>
 </UserControl>

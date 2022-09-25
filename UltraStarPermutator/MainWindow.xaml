@@ -11,9 +11,7 @@
             <Button Content="Load..." Click="LoadButton_Click" />
             <Button Content="Save..." Click="SaveButton_Click" />
         </StackPanel>
-        
-        <GroupBox Header="Project">
-            <local:ProjectControl />
-        </GroupBox>
+
+        <local:ProjectControl />
     </DockPanel>
 </Window>

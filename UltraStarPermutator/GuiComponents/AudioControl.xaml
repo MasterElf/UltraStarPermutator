@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="UltraStarPermutator.ProjectControl"
+﻿<UserControl x:Class="UltraStarPermutator.AudioControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,23 +9,15 @@
     <GroupBox>
         <GroupBox.Header>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Project name: " />
+                <TextBlock Text="Audio name: " />
                 <TextBox Text="{Binding Name}" />
             </StackPanel>
         </GroupBox.Header>
 
-        <DockPanel>
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
-                <Button Content="Add part" Click="AddPartButton_Click" />
-            </StackPanel>
-        
-            <ListView ItemsSource="{Binding Parts}">
-                <ListView.ItemTemplate>
-                    <DataTemplate DataType="local:PartModel">
-                        <local:PartControl />
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </DockPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Audio file path" />
+            <TextBox Text="{Binding FilePath}" />
+            <Button Content="Find..." Click="FindAudioButton_Click" />
+        </StackPanel>
     </GroupBox>
 </UserControl>
