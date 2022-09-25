@@ -29,9 +29,14 @@ namespace UltraStarPermutator
         public ObservableCollection<AudioModel> AudioTracks { get; private set; } = new ObservableCollection<AudioModel>();
 
         #region Parts serialization
-        public List<AudioModel> SerializedAudioTracks
+        public AudioModel[] SerializedAudioTracks
         {
-            get { return new List<AudioModel>(AudioTracks); }
+            get
+            {
+                var partsArray = new AudioModel[AudioTracks.Count];
+                AudioTracks.CopyTo(partsArray, 0);
+                return partsArray;
+            }
             set { AudioTracks = new ObservableCollection<AudioModel>(value); }
         }
         #endregion

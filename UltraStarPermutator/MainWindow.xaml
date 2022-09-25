@@ -6,7 +6,14 @@
         xmlns:local="clr-namespace:UltraStarPermutator"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <local:ProjectControl />
-    </Grid>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <Button Content="Load..." Click="LoadButton_Click" />
+            <Button Content="Save..." Click="SaveButton_Click" />
+        </StackPanel>
+        
+        <GroupBox Header="Project">
+            <local:ProjectControl />
+        </GroupBox>
+    </DockPanel>
 </Window>
