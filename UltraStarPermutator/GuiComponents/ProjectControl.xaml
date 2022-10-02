@@ -10,34 +10,36 @@
         <GroupBox.Header>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Project name: " />
-                <TextBox Text="{Binding Name}" />
+                <TextBox MinWidth="50" Text="{Binding Name}" />
             </StackPanel>
         </GroupBox.Header>
 
         <DockPanel>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
                 <Button Content="Add part" Click="AddPartButton_Click" />
+                <Button Content="Delete part" Click="DeletePartButton_Click" />
             </StackPanel>
 
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                 <TextBlock Text="Target folder: " />
-                <TextBox Text="{Binding TagetFolder}" />
+                <TextBox MinWidth="50" Text="{Binding TagetFolder}" />
                 <Button Content="Find..." Click="SetTargetFolderButton_Click" />
             </StackPanel>
 
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                 <TextBlock Text="Background file: " />
-                <TextBox Text="{Binding BackgroundFilePath}" />
+                <TextBox MinWidth="50" Text="{Binding BackgroundFilePath}" />
                 <Button Content="Find..." Click="SetBackgroundFilePathButton_Click" />
             </StackPanel>
 
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                 <TextBlock Text="Cover file: " />
-                <TextBox Text="{Binding CoverFilePath}" />
+                <TextBox MinWidth="50" Text="{Binding CoverFilePath}" />
                 <Button Content="Find..." Click="SetCoverFilePathButton_Click" />
             </StackPanel>
 
-            <ListView ItemsSource="{Binding Parts}">
+            <ListView ItemsSource="{Binding Parts}"
+                      SelectedItem="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ProjectControl}}, Path=SelectedPart}">
                 <ListView.ItemTemplate>
                     <DataTemplate DataType="local:PartModel">
                         <local:PartControl />

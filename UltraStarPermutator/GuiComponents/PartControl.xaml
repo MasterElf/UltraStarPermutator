@@ -10,7 +10,7 @@
         <GroupBox.Header>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Part name: " />
-                <TextBox Text="{Binding Name}" />
+                <TextBox MinWidth="50" Text="{Binding Name}" />
             </StackPanel>
         </GroupBox.Header>
         <DockPanel>
@@ -20,7 +20,7 @@
 
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                 <TextBlock Text="Part file path" />
-                <TextBox Text="{Binding FilePath}" />
+                <TextBox MinWidth="50" Text="{Binding FilePath}" />
                 <Button Content="Find..." Click="FindPartButton_Click" />
             </StackPanel>
 

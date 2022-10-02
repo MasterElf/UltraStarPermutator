@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.IO;
+using System.Windows;
 
 namespace UltraStarPermutator
 {
@@ -10,6 +11,19 @@ namespace UltraStarPermutator
     /// </summary>
     public partial class ProjectControl : UserControl
     {
+        public static readonly DependencyProperty SelectedPartProperty =
+        DependencyProperty.Register(
+            name: "SelectedPart",
+            propertyType: typeof(PartModel),
+            ownerType: typeof(ProjectControl),
+            typeMetadata: new FrameworkPropertyMetadata(defaultValue: default));
+
+        public PartModel SelectedPart
+        {
+            get => (PartModel)GetValue(SelectedPartProperty);
+            set => SetValue(SelectedPartProperty, value);
+        }
+
         public ProjectControl()
         {
             InitializeComponent();
@@ -20,6 +34,14 @@ namespace UltraStarPermutator
             if (DataContext is ProjectModel projectModel)
             {
                 projectModel.Parts.Add(new PartModel());
+            }
+        }
+
+        private void DeletePartButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (DataContext is ProjectModel projectModel && SelectedPart != null)
+            {
+                projectModel.Parts.Remove(SelectedPart);
             }
         }
 

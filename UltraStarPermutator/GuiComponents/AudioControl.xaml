@@ -10,13 +10,13 @@
         <GroupBox.Header>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Audio name: " />
-                <TextBox Text="{Binding Name}" />
+                <TextBox MinWidth="50" Text="{Binding Name}" />
             </StackPanel>
         </GroupBox.Header>
 
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="Audio file path" />
-            <TextBox Text="{Binding FilePath}" />
+            <TextBox MinWidth="50" Text="{Binding FilePath}" />
             <Button Content="Find..." Click="FindAudioButton_Click" />
         </StackPanel>
     </GroupBox>
