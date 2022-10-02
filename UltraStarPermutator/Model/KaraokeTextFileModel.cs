@@ -32,7 +32,8 @@ namespace UltraStarPermutator
         COVER,
         VIDEO,
         BPM,
-        GAP
+        GAP,
+        BACKGROUND
     }
 
     internal class KaraokeTextFileModel
@@ -103,7 +104,6 @@ namespace UltraStarPermutator
                 Regex r = new Regex(pattern, RegexOptions.CultureInvariant);
 
                 Match m = r.Match(row);
-                int matchCount = 0;
 
                 if (m.Success)
                 {

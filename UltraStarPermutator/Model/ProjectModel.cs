@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Xml.Serialization;
 
@@ -23,6 +22,22 @@ namespace UltraStarPermutator
         {
             get => tagetFolder;
             set => SetProperty(ref tagetFolder, value);
+        }
+
+        private string? backgroundFilePath;
+
+        public string? BackgroundFilePath
+        {
+            get => backgroundFilePath;
+            set => SetProperty(ref backgroundFilePath, value);
+        }
+
+        private string? coverFilePath;
+
+        public string? CoverFilePath
+        {
+            get => coverFilePath;
+            set => SetProperty(ref coverFilePath, value);
         }
 
         [XmlIgnore]

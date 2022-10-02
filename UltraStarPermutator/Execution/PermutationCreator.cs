@@ -13,15 +13,15 @@ namespace UltraStarPermutator
                 {
                     if (part != null)
                     {
-                        CreatePartPermutation(part, projectModel.TagetFolder, projectModel.Name);
+                        CreatePartPermutation(part, projectModel);
                     }
                 }
             }
         }
 
-        private static void CreatePartPermutation(PartModel part, string destinationFolder, string? projectName)
+        private static void CreatePartPermutation(PartModel part, ProjectModel projectModel)
         {
-            if (part != null && File.Exists(part.FilePath) && Directory.Exists(destinationFolder) && !string.IsNullOrEmpty(projectName))
+            if (part != null && File.Exists(part.FilePath) && Directory.Exists(projectModel.TagetFolder) && !string.IsNullOrEmpty(projectModel.Name))
             {
                 KaraokeTextFileModel karaokeTextFileModel = new KaraokeTextFileModel(File.ReadAllText(part.FilePath));
 
@@ -30,24 +30,37 @@ namespace UltraStarPermutator
                     if (!string.IsNullOrEmpty(audio.FilePath))
                     {
                         // Set correct title
-                        karaokeTextFileModel.SetTag(Tag.TITLE, projectName + " - " + part.Name + " - " + audio.Name);
+                        karaokeTextFileModel.SetTag(Tag.TITLE, projectModel.Name + " - " + part.Name + " - " + audio.Name);
 
                         // Set correct MP3 file name in text file
-                        string audioFileName = projectName + " - " + part.Name + " - " + audio.Name + ".mp3";
-                        karaokeTextFileModel.SetTag(Tag.MP3, audioFileName);
+                        CopyAndReferenceFile(projectModel.Name + " - " + part.Name + " - " + audio.Name + ".mp3", projectModel, karaokeTextFileModel, audio.FilePath, Tag.MP3);
 
-                        // Copy mp3 file
-                        if (File.Exists(audio.FilePath))
-                        {
-                            string destinationAudioFile = Path.Combine(destinationFolder, audioFileName);
-                            File.Copy(audio.FilePath, destinationAudioFile, true);
-                        }
+                        // Set correct #BACKGROUND
+                        CopyAndReferenceFile(Path.GetFileName(projectModel.BackgroundFilePath), projectModel, karaokeTextFileModel, projectModel.BackgroundFilePath, Tag.BACKGROUND);
 
                         // Write text file
-                        string textFileName = projectName + " - " + part.Name + " - " + audio.Name + ".txt";
-                        string destinationTextFile = Path.Combine(destinationFolder, textFileName);
+                        string textFileName = projectModel.Name + " - " + part.Name + " - " + audio.Name + ".txt";
+                        string destinationTextFile = Path.Combine(projectModel.TagetFolder, textFileName);
                         File.WriteAllText(destinationTextFile, karaokeTextFileModel.GetText());
                     }
+                }
+            }
+        }
+
+        private static void CopyAndReferenceFile(string? wantedFileName, ProjectModel projectModel, KaraokeTextFileModel karaokeTextFileModel, string? sourceFilePath, Tag tag)
+        {
+            if (projectModel != null &&
+                karaokeTextFileModel != null &&
+                !string.IsNullOrEmpty(wantedFileName) &&
+                !string.IsNullOrEmpty(projectModel.TagetFolder))
+            {
+                karaokeTextFileModel.SetTag(tag, wantedFileName);
+
+                // Copy mp3 file
+                if (File.Exists(sourceFilePath))
+                {
+                    string destinationAudioFile = Path.Combine(projectModel.TagetFolder, wantedFileName);
+                    File.Copy(sourceFilePath, destinationAudioFile, true);
                 }
             }
         }

@@ -25,6 +25,18 @@
                 <Button Content="Find..." Click="SetTargetFolderButton_Click" />
             </StackPanel>
 
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <TextBlock Text="Background file: " />
+                <TextBox Text="{Binding BackgroundFilePath}" />
+                <Button Content="Find..." Click="SetBackgroundFilePathButton_Click" />
+            </StackPanel>
+
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <TextBlock Text="Cover file: " />
+                <TextBox Text="{Binding CoverFilePath}" />
+                <Button Content="Find..." Click="SetCoverFilePathButton_Click" />
+            </StackPanel>
+
             <ListView ItemsSource="{Binding Parts}">
                 <ListView.ItemTemplate>
                     <DataTemplate DataType="local:PartModel">
