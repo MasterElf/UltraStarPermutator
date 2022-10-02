@@ -38,6 +38,9 @@ namespace UltraStarPermutator
                         // Set correct #BACKGROUND
                         CopyAndReferenceFile(Path.GetFileName(projectModel.BackgroundFilePath), projectModel, karaokeTextFileModel, projectModel.BackgroundFilePath, Tag.BACKGROUND);
 
+                        // Set correct #COVER
+                        CopyAndReferenceFile(Path.GetFileName(projectModel.CoverFilePath), projectModel, karaokeTextFileModel, projectModel.CoverFilePath, Tag.COVER);
+
                         // Write text file
                         string textFileName = projectModel.Name + " - " + part.Name + " - " + audio.Name + ".txt";
                         string destinationTextFile = Path.Combine(projectModel.TagetFolder, textFileName);
