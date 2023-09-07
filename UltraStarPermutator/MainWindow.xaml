@@ -11,6 +11,7 @@
             <Button Content="Load..." Click="LoadButton_Click" />
             <Button Content="Save..." Click="SaveButton_Click" />
             <Button Content="Execute" Click="ExecuteButton_Click" />
+            <Button Content="Create Mixes" Click="CreateMixesButton_Click" />
         </StackPanel>
 
         <local:ProjectControl />

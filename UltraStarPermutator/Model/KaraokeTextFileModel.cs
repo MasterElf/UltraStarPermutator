@@ -5,19 +5,6 @@ using System.Text.RegularExpressions;
 
 namespace UltraStarPermutator
 {
-    //#ARTIST:Entertainmen
-    //#TITLE:Let it snow
-    //#LANGUAGE:English
-    //#YEAR:2022
-    //#GENRE:Barbershop
-    //#CREATOR:Mats Elfving
-    //#EDITION:1.0
-    //#MP3:Let it snow - Karaoke.mp3
-    //#COVER:Let it snow - Karaoke.jpg
-    //#VIDEO:Let it snow - Karaoke.mp4
-    //#BPM:400
-    //#GAP:10664,44
-
     internal enum Tag
     {
         Unknown,
@@ -39,14 +26,14 @@ namespace UltraStarPermutator
     internal class KaraokeTextFileModel
     {
         Dictionary<Tag, string> tags = new Dictionary<Tag, string>();
-        StringBuilder body = new StringBuilder();
+        List<KaraokeBodyRowModel> bodyRows = new List<KaraokeBodyRowModel>();
 
         public KaraokeTextFileModel(string karaokeTextFileBody)
         {
             if (!string.IsNullOrEmpty(karaokeTextFileBody))
             {
                 // Split into rows
-                string[]? rows = karaokeTextFileBody.Split(new char[] { '\n', '\r' });
+                string[]? rows = karaokeTextFileBody.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (rows?.Length > 0)
                 {
@@ -58,7 +45,8 @@ namespace UltraStarPermutator
                         }
                         else if (!string.IsNullOrEmpty(row))
                         {
-                            body.AppendLine(row);
+                            KaraokeBodyRowModel bodyRow = new KaraokeBodyRowModel(row);
+                            bodyRows.Add(bodyRow);
                         }
                     }
                 }
@@ -80,7 +68,10 @@ namespace UltraStarPermutator
             }
 
             // Write body
-            text.Append(body.ToString());
+            foreach (var bodyRow in bodyRows)
+            {
+                text.AppendLine(bodyRow.ToString());
+            }
 
             return text.ToString();
         }

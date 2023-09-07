@@ -67,5 +67,13 @@ namespace UltraStarPermutator
                 PermutationCreator.Create(projectModel);
             }
         }
+
+        private void CreateMixesButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (projectModel != null)
+            {
+                PermutationCreator.Create(projectModel);
+            }
+        }
     }
 }
