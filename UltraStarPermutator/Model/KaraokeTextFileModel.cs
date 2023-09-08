@@ -30,6 +30,11 @@ namespace UltraStarPermutator
 
         public KaraokeTextFileModel(string karaokeTextFileBody)
         {
+            ParseText(karaokeTextFileBody);
+        }
+
+        private void ParseText(string karaokeTextFileBody)
+        {
             if (!string.IsNullOrEmpty(karaokeTextFileBody))
             {
                 // Split into rows
@@ -76,9 +81,18 @@ namespace UltraStarPermutator
             return text.ToString();
         }
 
-        public void SetTag(Tag tag, string content)
+        public void SetTag(string tagLine)
         {
-            tags[tag] = content;
+            if (RowIsTag(tagLine, out Tag tag, out string content))
+            {
+                tags[tag] = content;
+            }
+        }
+
+        public void SetBody(string bodyText)
+        {
+            bodyRows.Clear();
+            ParseText(bodyText);
         }
 
         private bool RowIsTag(string row, out Tag tag, out string content)
