@@ -14,6 +14,7 @@ namespace UltraStarPermutator
             {
                 List<KaraokeTextFileModel> models = new List<KaraokeTextFileModel>();
                 List<string> voiceNames = new List<string>();
+                int partNbr = 1;
 
                 foreach (PartModel? part in projectModel.Parts)
                 {
@@ -21,7 +22,8 @@ namespace UltraStarPermutator
                     {
                         KaraokeTextFileModel model = ReadKaraokeTextFileModelFromFile(part.FilePath);
                         models.Add(model);
-                        voiceNames.Add(part.Name ?? "Unknown");
+                        //voiceNames.Add(part.Name ?? "Unknown");
+                        voiceNames.Add("P" + partNbr++);
                     }
                 }
 
@@ -80,10 +82,10 @@ namespace UltraStarPermutator
             {
                 duettBody.AppendLine($"{voiceNames[i]}:");
 
-                foreach (var bodyRow in models[i].BodyRows)
+                foreach (KaraokeBodyRowModel bodyRow in models[i].BodyRows)
                 {
                     // Skip 'E' rows
-                    if (bodyRow.NoteType == NoteType.LineBreak && bodyRow.Components.Length > 1 && bodyRow.Components[1] == "E")
+                    if (bodyRow.Components.Length >= 1 && bodyRow.Components[0] == "E")
                     {
                         continue;
                     }
@@ -102,7 +104,7 @@ namespace UltraStarPermutator
             }
 
             // Add final 'E' row
-            duettBody.AppendLine("- E");
+            duettBody.AppendLine("E");
 
             // Set the duett body
             duettModel.SetBody(duettBody.ToString());
