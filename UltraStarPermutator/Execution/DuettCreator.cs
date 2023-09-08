@@ -73,7 +73,7 @@ namespace UltraStarPermutator
             }
 
             // Update GAP tag
-            duettModel.SetTag(Tag.GAP, lowestGAP.ToString(CultureInfo.InvariantCulture));
+            duettModel.SetTag(Tag.GAP, lowestGAP.ToString(new CultureInfo("sv-SE")));  // Swedish culture uses comma as the decimal separator
 
             // Combine bodies
             for (int i = 0; i < models.Count; i++)
