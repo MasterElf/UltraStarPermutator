@@ -72,7 +72,7 @@ namespace UltraStarPermutator
         {
             if (projectModel != null)
             {
-                PermutationCreator.Create(projectModel);
+                DuettCreator.Create(projectModel);
             }
         }
     }

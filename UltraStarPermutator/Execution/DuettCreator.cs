@@ -1,11 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Text;
 
 namespace UltraStarPermutator
 {
     internal class DuettCreator
     {
+        internal static void Create(ProjectModel projectModel)
+        {
+            if (projectModel != null && Directory.Exists(projectModel.TagetFolder))
+            {
+                List<KaraokeTextFileModel> models = new List<KaraokeTextFileModel>();
+                List<string> voiceNames = new List<string>();
+
+                foreach (PartModel? part in projectModel.Parts)
+                {
+                    if (part != null && File.Exists(part.FilePath))
+                    {
+                        KaraokeTextFileModel model = ReadKaraokeTextFileModelFromFile(part.FilePath);
+                        models.Add(model);
+                        voiceNames.Add(part.Name ?? "Unknown");
+                    }
+                }
+
+                KaraokeTextFileModel duettModel = CreateDuett(models, voiceNames);
+
+                // Write the duett model to a text file
+                string textFileName = projectModel.Name + " - Duett.txt";
+                string destinationTextFile = Path.Combine(projectModel.TagetFolder, textFileName);
+                File.WriteAllText(destinationTextFile, duettModel.GetText());
+            }
+        }
+
+        private static KaraokeTextFileModel ReadKaraokeTextFileModelFromFile(string filePath)
+        {
+            return new KaraokeTextFileModel(File.ReadAllText(filePath));
+        }
+
         public static KaraokeTextFileModel CreateDuett(List<KaraokeTextFileModel> models, List<string> voiceNames)
         {
             if (models.Count != voiceNames.Count)
@@ -17,15 +50,18 @@ namespace UltraStarPermutator
             StringBuilder duettBody = new StringBuilder();
 
             // Choose the lowest GAP value
-            int lowestGAP = int.MaxValue;
+            double lowestGAP = double.MaxValue;
             foreach (var model in models)
             {
                 if (model.Tags.TryGetValue(Tag.GAP, out string gapValue))
                 {
-                    int gap = int.Parse(gapValue);
-                    if (gap < lowestGAP)
+                    gapValue = gapValue.Replace(',', '.'); // Replace comma with dot for parsing
+                    if (double.TryParse(gapValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double gap))
                     {
-                        lowestGAP = gap;
+                        if (gap < lowestGAP)
+                        {
+                            lowestGAP = gap;
+                        }
                     }
                 }
             }
@@ -33,11 +69,11 @@ namespace UltraStarPermutator
             // Copy tags from the first model
             foreach (KeyValuePair<Tag, string> tag in models[0].Tags)
             {
-                duettModel.SetTag($"#{tag.Key}:{tag.Value}");
+                duettModel.SetTag(tag.Key, tag.Value);
             }
 
             // Update GAP tag
-            duettModel.SetTag($"#GAP:{lowestGAP}");
+            duettModel.SetTag(Tag.GAP, lowestGAP.ToString(CultureInfo.InvariantCulture));
 
             // Combine bodies
             for (int i = 0; i < models.Count; i++)
@@ -56,7 +92,8 @@ namespace UltraStarPermutator
                     if (bodyRow.Components.Length > 1)
                     {
                         int originalTime = int.Parse(bodyRow.Components[1]);
-                        int adjustedTime = originalTime - (lowestGAP - int.Parse(models[i].Tags[Tag.GAP]));
+                        double gapDifference = lowestGAP - double.Parse(models[i].Tags[Tag.GAP].Replace(',', '.'), CultureInfo.InvariantCulture);
+                        int adjustedTime = originalTime - (int)Math.Round(gapDifference);
                         bodyRow.Components[1] = adjustedTime.ToString();
                     }
 
