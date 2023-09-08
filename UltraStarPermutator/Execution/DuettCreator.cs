@@ -8,48 +8,69 @@ namespace UltraStarPermutator
     {
         public static KaraokeTextFileModel CreateDuett(List<KaraokeTextFileModel> models, List<string> voiceNames)
         {
-            if (models == null || models.Count == 0 || voiceNames.Count != models.Count)
+            if (models.Count != voiceNames.Count)
             {
-                throw new ArgumentException("Invalid input models or voice names.");
+                throw new ArgumentException("The number of models must match the number of voice names.");
             }
 
-            // Create a new KaraokeTextFileModel to hold the duet
-            KaraokeTextFileModel duetModel = new KaraokeTextFileModel("");
+            KaraokeTextFileModel duettModel = new KaraokeTextFileModel("");
+            StringBuilder duettBody = new StringBuilder();
 
-            // Copy tags from the first model
-            string firstModelText = models[0].GetText();
-            string[] firstModelLines = firstModelText.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string line in firstModelLines)
+            // Choose the lowest GAP value
+            int lowestGAP = int.MaxValue;
+            foreach (var model in models)
             {
-                if (line.StartsWith("#"))
+                if (model.Tags.TryGetValue(Tag.GAP, out string gapValue))
                 {
-                    duetModel.SetTag(line);
-                }
-            }
-
-            // Combine the body parts
-            StringBuilder duetBody = new StringBuilder();
-            for (int i = 0; i < models.Count; i++)
-            {
-                duetBody.AppendLine($"{voiceNames[i]}:"); // Add the name of the voice
-                string modelText = models[i].GetText();
-                string[] modelLines = modelText.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string line in modelLines)
-                {
-                    if (!line.StartsWith("#"))
+                    int gap = int.Parse(gapValue);
+                    if (gap < lowestGAP)
                     {
-                        duetBody.AppendLine(line);
+                        lowestGAP = gap;
                     }
                 }
             }
 
-            // Add the "E" tag at the end
-            duetBody.AppendLine("E");
+            // Copy tags from the first model
+            foreach (KeyValuePair<Tag, string> tag in models[0].Tags)
+            {
+                duettModel.SetTag($"#{tag.Key}:{tag.Value}");
+            }
 
-            // Set the body part to the duet model
-            duetModel.SetBody(duetBody.ToString());
+            // Update GAP tag
+            duettModel.SetTag($"#GAP:{lowestGAP}");
 
-            return duetModel;
+            // Combine bodies
+            for (int i = 0; i < models.Count; i++)
+            {
+                duettBody.AppendLine($"{voiceNames[i]}:");
+
+                foreach (var bodyRow in models[i].BodyRows)
+                {
+                    // Skip 'E' rows
+                    if (bodyRow.NoteType == NoteType.LineBreak && bodyRow.Components.Length > 1 && bodyRow.Components[1] == "E")
+                    {
+                        continue;
+                    }
+
+                    // Adjust the time in the second column
+                    if (bodyRow.Components.Length > 1)
+                    {
+                        int originalTime = int.Parse(bodyRow.Components[1]);
+                        int adjustedTime = originalTime - (lowestGAP - int.Parse(models[i].Tags[Tag.GAP]));
+                        bodyRow.Components[1] = adjustedTime.ToString();
+                    }
+
+                    duettBody.AppendLine(bodyRow.ToString());
+                }
+            }
+
+            // Add final 'E' row
+            duettBody.AppendLine("- E");
+
+            // Set the duett body
+            duettModel.SetBody(duettBody.ToString());
+
+            return duettModel;
         }
     }
 }

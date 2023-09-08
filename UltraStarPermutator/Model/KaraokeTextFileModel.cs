@@ -28,6 +28,9 @@ namespace UltraStarPermutator
         Dictionary<Tag, string> tags = new Dictionary<Tag, string>();
         List<KaraokeBodyRowModel> bodyRows = new List<KaraokeBodyRowModel>();
 
+        internal Dictionary<Tag, string> Tags { get => tags; set => tags = value; }
+        internal List<KaraokeBodyRowModel> BodyRows { get => bodyRows; set => bodyRows = value; }
+
         public KaraokeTextFileModel(string karaokeTextFileBody)
         {
             ParseText(karaokeTextFileBody);
@@ -46,12 +49,12 @@ namespace UltraStarPermutator
                     {
                         if (RowIsTag(row, out Tag tag, out string content))
                         {
-                            tags[tag] = content;
+                            Tags[tag] = content;
                         }
                         else if (!string.IsNullOrEmpty(row))
                         {
                             KaraokeBodyRowModel bodyRow = new KaraokeBodyRowModel(row);
-                            bodyRows.Add(bodyRow);
+                            BodyRows.Add(bodyRow);
                         }
                     }
                 }
@@ -63,7 +66,7 @@ namespace UltraStarPermutator
             StringBuilder text = new StringBuilder();
 
             // Write tags
-            foreach (KeyValuePair<Tag, string> pair in tags)
+            foreach (KeyValuePair<Tag, string> pair in Tags)
             {
                 text.Append('#');
                 text.Append(pair.Key);
@@ -73,7 +76,7 @@ namespace UltraStarPermutator
             }
 
             // Write body
-            foreach (var bodyRow in bodyRows)
+            foreach (var bodyRow in BodyRows)
             {
                 text.AppendLine(bodyRow.ToString());
             }
@@ -85,13 +88,18 @@ namespace UltraStarPermutator
         {
             if (RowIsTag(tagLine, out Tag tag, out string content))
             {
-                tags[tag] = content;
+                Tags[tag] = content;
             }
+        }
+
+        public void SetTag(Tag tag, string content)
+        {
+            Tags[tag] = content;
         }
 
         public void SetBody(string bodyText)
         {
-            bodyRows.Clear();
+            BodyRows.Clear();
             ParseText(bodyText);
         }
 
