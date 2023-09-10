@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 
 namespace UltraStarPermutator
 {
@@ -8,11 +10,21 @@ namespace UltraStarPermutator
         {
             if (projectModel != null && Directory.Exists(projectModel.TagetFolder))
             {
-                foreach (PartModel? part in projectModel.Parts)
+                ProjectModel modelToPermutate = projectModel;
+
+                if (projectModel.CreateDuettes)
+                {
+                    // Clone projectModel to modelToPermutate
+                    modelToPermutate = Serializer.DeepCopyWithXml(projectModel);
+
+                    // TODO: Create duettes in modelToPermutate
+                }
+
+                foreach (PartModel? part in modelToPermutate.Parts)
                 {
                     if (part != null)
                     {
-                        CreatePartPermutation(part, projectModel);
+                        CreatePartPermutation(part, modelToPermutate);
                     }
                 }
             }

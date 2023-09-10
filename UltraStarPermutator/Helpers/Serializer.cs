@@ -34,5 +34,16 @@ namespace UltraStarPermutator
 
             return response;
         }
+
+        public static T DeepCopyWithXml<T>(T obj)
+        {
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                xmlSerializer.Serialize(memoryStream, obj);
+                memoryStream.Position = 0;
+                return (T)xmlSerializer.Deserialize(memoryStream);
+            }
+        }
     }
 }

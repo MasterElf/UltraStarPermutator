@@ -37,6 +37,9 @@
                 <TextBox MinWidth="50" Text="{Binding CoverFilePath}" />
                 <Button Content="Find..." Click="SetCoverFilePathButton_Click" />
             </StackPanel>
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <CheckBox Content="Create permutated Duettes" IsChecked="{Binding CreateDuettes }" />
+            </StackPanel>
 
             <ListView ItemsSource="{Binding Parts}"
                       SelectedItem="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ProjectControl}}, Path=SelectedPart}">

@@ -40,6 +40,14 @@ namespace UltraStarPermutator
             set => SetProperty(ref coverFilePath, value);
         }
 
+        public bool CreateDuettes
+        {
+            get => createDuettes;
+            set => SetProperty(ref createDuettes, value);
+        }
+
+        private bool createDuettes;
+
         [XmlIgnore]
         public ObservableCollection<PartModel> Parts { get; private set; } = new ObservableCollection<PartModel>();
 
