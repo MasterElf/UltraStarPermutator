@@ -56,7 +56,7 @@ namespace UltraStarPermutator
 
                         // Set correct #BACKGROUND
                         AddTextAndSaveImage(projectModel.Name + " - " + part.Name + " - " + audio.Name + ".png",
-                            projectModel, karaokeTextFileModel, projectModel.BackgroundFilePath, Tag.BACKGROUND, 16.0/9);
+                            projectModel, karaokeTextFileModel, projectModel.BackgroundFilePath, Tag.BACKGROUND, 16.0/9, "P1", "P2");
                         //CopyAndReferenceFile(Path.GetFileName(projectModel.BackgroundFilePath), projectModel, karaokeTextFileModel, projectModel.BackgroundFilePath, Tag.BACKGROUND);
 
                         // Set correct #COVER
@@ -149,9 +149,10 @@ namespace UltraStarPermutator
         /// <param name="karaokeTextFileModel">The karaoke text file model for setting tags.</param>
         /// <param name="sourceFilePath">The source file path of the image.</param>
         /// <param name="tag">The tag to set in the karaoke text file model.</param>
-        /// <param name="aspectRatio">The aspect ratio to use for cropping the image. Format is width/height. For example, 16/9 for widescreen.</param>
-        private static void AddTextAndSaveImage(string? wantedFileName, ProjectModel? projectModel,
-            KaraokeTextFileModel karaokeTextFileModel, string? sourceFilePath, Tag tag, double aspectRatio)
+        /// <param name="aspectRatio">The aspect ratio to use for cropping the image. Format is width/height.</param>
+        /// <param name="topLeftText">The text to display at the top-left corner of the image.</param>
+        /// <param name="bottomCenterText">The text to display at the bottom-center of the image.</param>
+        private static void AddTextAndSaveImage(string? wantedFileName, ProjectModel? projectModel, KaraokeTextFileModel karaokeTextFileModel, string? sourceFilePath, Tag tag, double aspectRatio, string topLeftText, string bottomCenterText)
         {
             if (projectModel != null &&
                 karaokeTextFileModel != null &&
@@ -188,14 +189,48 @@ namespace UltraStarPermutator
                                 Color = SKColors.White,
                                 IsAntialias = true,
                                 Style = SKPaintStyle.Fill,
-                                TextAlign = SKTextAlign.Center,
+                                TextAlign = SKTextAlign.Left,
                                 TextSize = 240
                             };
 
-                            float x = croppedBitmap.Width / 2;
-                            float y = croppedBitmap.Height / 2;
+                            // Draw outline
+                            SKPaint outlinePaint = new SKPaint
+                            {
+                                Color = SKColors.Black,
+                                IsAntialias = true,
+                                Style = SKPaintStyle.Stroke,
+                                StrokeWidth = 4,
+                                TextAlign = SKTextAlign.Left,
+                                TextSize = 240
+                            };
 
-                            canvas.DrawText("Your Text Here", x, y, paint);
+                            // Draw shadow
+                            SKPaint shadowPaint = new SKPaint
+                            {
+                                Color = SKColors.Gray,
+                                IsAntialias = true,
+                                Style = SKPaintStyle.Fill,
+                                TextAlign = SKTextAlign.Left,
+                                TextSize = 240
+                            };
+
+                            float xPos = 10;
+
+                            // Draw top-left text
+                            canvas.DrawText(topLeftText, xPos, 250 + 5, shadowPaint);
+                            canvas.DrawText(topLeftText, xPos, 250, outlinePaint);
+                            canvas.DrawText(topLeftText, xPos, 250, paint);
+
+                            // Draw bottom-center text
+                            //float x = croppedBitmap.Width / 2;
+                            float y = croppedBitmap.Height - 100;
+
+                            paint.TextAlign = SKTextAlign.Center;
+                            outlinePaint.TextAlign = SKTextAlign.Center;
+
+                            canvas.DrawText(bottomCenterText, xPos, y + 5, shadowPaint);
+                            canvas.DrawText(bottomCenterText, xPos, y, outlinePaint);
+                            canvas.DrawText(bottomCenterText, xPos, y, paint);
                         }
 
                         using (SKFileWStream outStream = new SKFileWStream(destinationImageFile))
