@@ -21,7 +21,7 @@ namespace UltraStarPermutator
                     if (part != null && part.HaveFileData()) // Använder HaveFileData
                     {
                         string fileContent = part.ReadFileData(); // Använder ReadFileData
-                        KaraokeTextFileModel model = new KaraokeTextFileModel(fileContent);
+                        KaraokeTextFileModel model = new KaraokeTextFileModel(fileContent, part.AssertTrailingSpace);
                         models.Add(model);
                         //voiceNames.Add(part.Name ?? "Unknown");
                         voiceNames.Add("P" + partNbr++);
@@ -44,7 +44,7 @@ namespace UltraStarPermutator
                 throw new ArgumentException("The number of models must match the number of voice names.");
             }
 
-            KaraokeTextFileModel duettModel = new KaraokeTextFileModel("");
+            KaraokeTextFileModel duettModel = new KaraokeTextFileModel("", false);
             StringBuilder duettBody = new StringBuilder();
 
             // Choose the lowest GAP value
@@ -103,7 +103,7 @@ namespace UltraStarPermutator
             duettBody.AppendLine("E");
 
             // Set the duett body
-            duettModel.SetBody(duettBody.ToString());
+            duettModel.SetBody(duettBody.ToString(), false);
 
             return duettModel;
         }

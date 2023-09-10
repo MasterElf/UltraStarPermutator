@@ -18,7 +18,7 @@ namespace UltraStarPermutator
         public int NumberOfComponents { get; set; }
         public string[] Components { get; set; }
 
-        public KaraokeBodyRowModel(string row)
+        public KaraokeBodyRowModel(string row, bool assertTrailingSpace)
         {
             // Use regex to split the row into components, preserving spaces in the fifth column
             var match = Regex.Match(row, @"^(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(.*)$");
@@ -29,6 +29,7 @@ namespace UltraStarPermutator
                 {
                     Components[i - 1] = match.Groups[i].Value;
                 }
+
                 NumberOfComponents = 5;
             }
             else
@@ -47,6 +48,15 @@ namespace UltraStarPermutator
                     "-" => NoteType.LineBreak,
                     _ => NoteType.Unknown
                 };
+            }
+
+            // Add a trailing space to the last component if it doesn't already have one
+            if (assertTrailingSpace && NumberOfComponents > 4)
+            {
+                if (!Components[4].EndsWith(" "))
+                {
+                    Components[4] += " ";
+                }
             }
         }
 

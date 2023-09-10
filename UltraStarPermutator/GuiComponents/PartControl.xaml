@@ -24,6 +24,10 @@
                 <Button Content="Find..." Click="FindPartButton_Click" />
             </StackPanel>
 
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <CheckBox Content="Assert space after lyric text" IsChecked="{Binding AssertTrailingSpace}" />
+            </StackPanel>
+
             <ListView ItemsSource="{Binding AudioTracks}">
                 <ListView.ItemTemplate>
                     <DataTemplate DataType="local:AudioModel">

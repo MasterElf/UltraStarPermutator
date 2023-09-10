@@ -31,12 +31,12 @@ namespace UltraStarPermutator
         internal Dictionary<Tag, string> Tags { get => tags; set => tags = value; }
         internal List<KaraokeBodyRowModel> BodyRows { get => bodyRows; set => bodyRows = value; }
 
-        public KaraokeTextFileModel(string karaokeTextFileBody)
+        public KaraokeTextFileModel(string karaokeTextFileBody, bool assertTrailingSpace)
         {
-            ParseText(karaokeTextFileBody);
+            ParseText(karaokeTextFileBody, assertTrailingSpace);
         }
 
-        private void ParseText(string karaokeTextFileBody)
+        private void ParseText(string karaokeTextFileBody, bool assertTrailingSpace)
         {
             if (!string.IsNullOrEmpty(karaokeTextFileBody))
             {
@@ -53,7 +53,7 @@ namespace UltraStarPermutator
                         }
                         else if (!string.IsNullOrEmpty(row))
                         {
-                            KaraokeBodyRowModel bodyRow = new KaraokeBodyRowModel(row);
+                            KaraokeBodyRowModel bodyRow = new KaraokeBodyRowModel(row, assertTrailingSpace);
                             BodyRows.Add(bodyRow);
                         }
                     }
@@ -97,10 +97,10 @@ namespace UltraStarPermutator
             Tags[tag] = content;
         }
 
-        public void SetBody(string bodyText)
+        public void SetBody(string bodyText, bool assertTrailingSpace)
         {
             BodyRows.Clear();
-            ParseText(bodyText);
+            ParseText(bodyText, assertTrailingSpace);
         }
 
         private bool RowIsTag(string row, out Tag tag, out string content)

@@ -26,6 +26,14 @@ public class PartModel : ObservableObject
         set => SetProperty(ref filePath, value);
     }
 
+    private bool assertTrailingSpace;
+
+    public bool AssertTrailingSpace
+    {
+        get => assertTrailingSpace;
+        set => SetProperty(ref assertTrailingSpace, value);
+    }
+
     [XmlIgnore] // Detta attribut ser till att MemoryStream ignoreras vid serialisering
     public MemoryStream? FileData { get; set; }
 

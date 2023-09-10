@@ -37,7 +37,7 @@ namespace UltraStarPermutator
             if (part != null && part.HaveFileData() && Directory.Exists(projectModel.TagetFolder) && !string.IsNullOrEmpty(projectModel.Name)) // Använder HaveFileData
             {
                 string fileContent = part.ReadFileData(); // Använder ReadFileData
-                KaraokeTextFileModel karaokeTextFileModel = new KaraokeTextFileModel(fileContent);
+                KaraokeTextFileModel karaokeTextFileModel = new KaraokeTextFileModel(fileContent, part.AssertTrailingSpace);
 
                 foreach (var audio in part.AudioTracks)
                 {
@@ -78,8 +78,8 @@ namespace UltraStarPermutator
                     if (part1.HaveFileData() && part2.HaveFileData())
                     {
                         // Read file data into KaraokeTextFileModels
-                        KaraokeTextFileModel model1 = new KaraokeTextFileModel(part1.ReadFileData());
-                        KaraokeTextFileModel model2 = new KaraokeTextFileModel(part2.ReadFileData());
+                        KaraokeTextFileModel model1 = new KaraokeTextFileModel(part1.ReadFileData(), part1.AssertTrailingSpace);
+                        KaraokeTextFileModel model2 = new KaraokeTextFileModel(part2.ReadFileData(), part2.AssertTrailingSpace);
 
                         // Create the duet model
                         List<KaraokeTextFileModel> models = new List<KaraokeTextFileModel> { model1, model2 };
