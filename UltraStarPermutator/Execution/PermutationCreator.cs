@@ -35,27 +35,33 @@ namespace UltraStarPermutator
 
         private static void CreatePartPermutation(PartModel part, ProjectModel? projectModel)
         {
-            if (part != null && part.HaveFileData() && Directory.Exists(projectModel.TagetFolder) && !string.IsNullOrEmpty(projectModel.Name)) // Använder HaveFileData
+            if (part != null && part.HaveFileData() && Directory.Exists(projectModel.TagetFolder) &&
+                !string.IsNullOrEmpty(projectModel.Name)) // Använder HaveFileData
             {
                 string fileContent = part.ReadFileData(); // Använder ReadFileData
-                KaraokeTextFileModel karaokeTextFileModel = new KaraokeTextFileModel(fileContent, part.AssertTrailingSpace);
+                KaraokeTextFileModel karaokeTextFileModel =
+                    new KaraokeTextFileModel(fileContent, part.AssertTrailingSpace);
 
                 foreach (var audio in part.AudioTracks)
                 {
                     if (!string.IsNullOrEmpty(audio.FilePath))
                     {
                         // Set correct title
-                        karaokeTextFileModel.SetTag(Tag.TITLE, projectModel.Name + " - " + part.Name + " - " + audio.Name);
+                        karaokeTextFileModel.SetTag(Tag.TITLE,
+                            projectModel.Name + " - " + part.Name + " - " + audio.Name);
 
                         // Set correct MP3 file name in text file
-                        CopyAndReferenceFile(projectModel.Name + " - " + part.Name + " - " + audio.Name + ".mp3", projectModel, karaokeTextFileModel, audio.FilePath, Tag.MP3);
+                        CopyAndReferenceFile(projectModel.Name + " - " + part.Name + " - " + audio.Name + ".mp3",
+                            projectModel, karaokeTextFileModel, audio.FilePath, Tag.MP3);
 
                         // Set correct #BACKGROUND
-                        AddTextAndSaveImage(projectModel.Name + " - " + part.Name + " - " + audio.Name + ".png", projectModel, karaokeTextFileModel, projectModel.BackgroundFilePath, Tag.BACKGROUND);
+                        AddTextAndSaveImage(projectModel.Name + " - " + part.Name + " - " + audio.Name + ".png",
+                            projectModel, karaokeTextFileModel, projectModel.BackgroundFilePath, Tag.BACKGROUND, 16.0/9);
                         //CopyAndReferenceFile(Path.GetFileName(projectModel.BackgroundFilePath), projectModel, karaokeTextFileModel, projectModel.BackgroundFilePath, Tag.BACKGROUND);
 
                         // Set correct #COVER
-                        CopyAndReferenceFile(Path.GetFileName(projectModel.CoverFilePath), projectModel, karaokeTextFileModel, projectModel.CoverFilePath, Tag.COVER);
+                        CopyAndReferenceFile(Path.GetFileName(projectModel.CoverFilePath), projectModel,
+                            karaokeTextFileModel, projectModel.CoverFilePath, Tag.COVER);
 
                         // Write text file
                         string textFileName = projectModel.Name + " - " + part.Name + " - " + audio.Name + ".txt";
@@ -80,8 +86,10 @@ namespace UltraStarPermutator
                     if (part1.HaveFileData() && part2.HaveFileData())
                     {
                         // Read file data into KaraokeTextFileModels
-                        KaraokeTextFileModel model1 = new KaraokeTextFileModel(part1.ReadFileData(), part1.AssertTrailingSpace);
-                        KaraokeTextFileModel model2 = new KaraokeTextFileModel(part2.ReadFileData(), part2.AssertTrailingSpace);
+                        KaraokeTextFileModel model1 =
+                            new KaraokeTextFileModel(part1.ReadFileData(), part1.AssertTrailingSpace);
+                        KaraokeTextFileModel model2 =
+                            new KaraokeTextFileModel(part2.ReadFileData(), part2.AssertTrailingSpace);
 
                         // Create the duet model
                         List<KaraokeTextFileModel> models = new List<KaraokeTextFileModel> { model1, model2 };
@@ -115,7 +123,8 @@ namespace UltraStarPermutator
             }
         }
 
-        private static void CopyAndReferenceFile(string? wantedFileName, ProjectModel? projectModel, KaraokeTextFileModel karaokeTextFileModel, string? sourceFilePath, Tag tag)
+        private static void CopyAndReferenceFile(string? wantedFileName, ProjectModel? projectModel,
+            KaraokeTextFileModel karaokeTextFileModel, string? sourceFilePath, Tag tag)
         {
             if (projectModel != null &&
                 karaokeTextFileModel != null &&
@@ -132,7 +141,17 @@ namespace UltraStarPermutator
             }
         }
 
-        private static void AddTextAndSaveImage(string? wantedFileName, ProjectModel? projectModel, KaraokeTextFileModel karaokeTextFileModel, string? sourceFilePath, Tag tag)
+        /// <summary>
+        /// Adds text to an image and saves it to a new file.
+        /// </summary>
+        /// <param name="wantedFileName">The name of the new image file.</param>
+        /// <param name="projectModel">The project model containing target folder information.</param>
+        /// <param name="karaokeTextFileModel">The karaoke text file model for setting tags.</param>
+        /// <param name="sourceFilePath">The source file path of the image.</param>
+        /// <param name="tag">The tag to set in the karaoke text file model.</param>
+        /// <param name="aspectRatio">The aspect ratio to use for cropping the image. Format is width/height. For example, 16/9 for widescreen.</param>
+        private static void AddTextAndSaveImage(string? wantedFileName, ProjectModel? projectModel,
+            KaraokeTextFileModel karaokeTextFileModel, string? sourceFilePath, Tag tag, double aspectRatio)
         {
             if (projectModel != null &&
                 karaokeTextFileModel != null &&
@@ -147,7 +166,22 @@ namespace UltraStarPermutator
 
                     using (SKBitmap srcBitmap = SKBitmap.Decode(sourceFilePath))
                     {
-                        using (SKCanvas canvas = new SKCanvas(srcBitmap))
+                        // Calculate the dimensions for cropping based on the aspect ratio
+                        int newWidth = srcBitmap.Width;
+                        int newHeight = (int)(newWidth / aspectRatio);
+
+                        if (newHeight > srcBitmap.Height)
+                        {
+                            newHeight = srcBitmap.Height;
+                            newWidth = (int)(newHeight * aspectRatio);
+                        }
+
+                        // Create a new cropped bitmap
+                        SKRectI cropRect = new SKRectI(0, 0, newWidth, newHeight);
+                        SKBitmap croppedBitmap = new SKBitmap(cropRect.Width, cropRect.Height);
+                        srcBitmap.ExtractSubset(croppedBitmap, cropRect);
+
+                        using (SKCanvas canvas = new SKCanvas(croppedBitmap))
                         {
                             SKPaint paint = new SKPaint
                             {
@@ -158,15 +192,15 @@ namespace UltraStarPermutator
                                 TextSize = 240
                             };
 
-                            float x = srcBitmap.Width / 2;
-                            float y = srcBitmap.Height / 2;
+                            float x = croppedBitmap.Width / 2;
+                            float y = croppedBitmap.Height / 2;
 
                             canvas.DrawText("Your Text Here", x, y, paint);
                         }
 
                         using (SKFileWStream outStream = new SKFileWStream(destinationImageFile))
                         {
-                            SKPixmap.Encode(outStream, srcBitmap, SKEncodedImageFormat.Png, 100);
+                            SKPixmap.Encode(outStream, croppedBitmap, SKEncodedImageFormat.Png, 100);
                         }
                     }
                 }
