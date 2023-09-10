@@ -38,7 +38,7 @@
                 <Button Content="Find..." Click="SetCoverFilePathButton_Click" />
             </StackPanel>
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                <CheckBox Content="Create permutated Duettes" IsChecked="{Binding CreateDuettes }" />
+                <CheckBox Content="Create permutated Duets" IsChecked="{Binding CreateDuets }" />
             </StackPanel>
 
             <ListView ItemsSource="{Binding Parts}"

@@ -40,13 +40,13 @@ namespace UltraStarPermutator
             set => SetProperty(ref coverFilePath, value);
         }
 
-        public bool CreateDuettes
+        public bool CreateDuets
         {
-            get => createDuettes;
-            set => SetProperty(ref createDuettes, value);
+            get => createDuets;
+            set => SetProperty(ref createDuets, value);
         }
 
-        private bool createDuettes;
+        private bool createDuets;
 
         [XmlIgnore]
         public ObservableCollection<PartModel> Parts { get; private set; } = new ObservableCollection<PartModel>();

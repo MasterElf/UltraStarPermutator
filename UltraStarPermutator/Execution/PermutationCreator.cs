@@ -13,13 +13,13 @@ namespace UltraStarPermutator
             {
                 ProjectModel modelToPermutate = projectModel;
 
-                if (projectModel.CreateDuettes)
+                if (projectModel.CreateDuets)
                 {
                     // Clone source to modelToPermutate
                     modelToPermutate = Serializer.DeepCopyWithXml(projectModel);
 
                     // Create duettes in modelToPermutate
-                    CreateDuettes(projectModel, modelToPermutate);
+                    CreateDuets(projectModel, modelToPermutate);
                 }
 
                 foreach (PartModel? part in modelToPermutate.Parts)
@@ -64,7 +64,7 @@ namespace UltraStarPermutator
             }
         }
 
-        private static void CreateDuettes(ProjectModel source, ProjectModel destination)
+        private static void CreateDuets(ProjectModel source, ProjectModel destination)
         {
             var partModels = source.Parts.ToArray();
 
