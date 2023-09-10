@@ -35,7 +35,7 @@ namespace UltraStarPermutator
             return response;
         }
 
-        public static T DeepCopyWithXml<T>(T obj)
+        public static T? DeepCopyWithXml<T>(T obj)
         {
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(T));
             using (MemoryStream memoryStream = new MemoryStream())

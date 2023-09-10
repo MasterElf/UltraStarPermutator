@@ -7,11 +7,11 @@ namespace UltraStarPermutator
 {
     internal static class PermutationCreator
     {
-        internal static void Create(ProjectModel projectModel)
+        internal static void Create(ProjectModel? projectModel)
         {
             if (projectModel != null && Directory.Exists(projectModel.TagetFolder))
             {
-                ProjectModel modelToPermutate = projectModel;
+                ProjectModel? modelToPermutate = projectModel;
 
                 if (projectModel.CreateDuets)
                 {
@@ -32,7 +32,7 @@ namespace UltraStarPermutator
             }
         }
 
-        private static void CreatePartPermutation(PartModel part, ProjectModel projectModel)
+        private static void CreatePartPermutation(PartModel part, ProjectModel? projectModel)
         {
             if (part != null && part.HaveFileData() && Directory.Exists(projectModel.TagetFolder) && !string.IsNullOrEmpty(projectModel.Name)) // Använder HaveFileData
             {
@@ -64,7 +64,7 @@ namespace UltraStarPermutator
             }
         }
 
-        private static void CreateDuets(ProjectModel source, ProjectModel destination)
+        private static void CreateDuets(ProjectModel? source, ProjectModel? destination)
         {
             var partModels = source.Parts.ToArray();
 
@@ -113,7 +113,7 @@ namespace UltraStarPermutator
             }
         }
 
-        private static void CopyAndReferenceFile(string? wantedFileName, ProjectModel projectModel, KaraokeTextFileModel karaokeTextFileModel, string? sourceFilePath, Tag tag)
+        private static void CopyAndReferenceFile(string? wantedFileName, ProjectModel? projectModel, KaraokeTextFileModel karaokeTextFileModel, string? sourceFilePath, Tag tag)
         {
             if (projectModel != null &&
                 karaokeTextFileModel != null &&
