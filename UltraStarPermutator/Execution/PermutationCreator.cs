@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace UltraStarPermutator
 {
@@ -70,16 +72,43 @@ namespace UltraStarPermutator
             {
                 for (int j = i + 1; j < partModels.Length; j++)
                 {
-                    // Create a new ProjectModel for the duet
-                    ProjectModel duetProjectModel = Serializer.DeepCopyWithXml(source);
+                    PartModel part1 = partModels[i];
+                    PartModel part2 = partModels[j];
 
-                    // Clear existing parts and add only the two parts for the duet
-                    duetProjectModel.Parts.Clear();
-                    duetProjectModel.Parts.Add(partModels[i]);
-                    duetProjectModel.Parts.Add(partModels[j]);
+                    if (part1.HaveFileData() && part2.HaveFileData())
+                    {
+                        // Read file data into KaraokeTextFileModels
+                        KaraokeTextFileModel model1 = new KaraokeTextFileModel(part1.ReadFileData());
+                        KaraokeTextFileModel model2 = new KaraokeTextFileModel(part2.ReadFileData());
 
-                    // Create the duet
-                    DuettCreator.Create(duetProjectModel);
+                        // Create the duet model
+                        List<KaraokeTextFileModel> models = new List<KaraokeTextFileModel> { model1, model2 };
+                        //List<string> voiceNames = new List<string> { part1.Name ?? "Unknown", part2.Name ?? "Unknown" };
+                        List<string> voiceNames = new List<string> { "P1", "P2" };
+                        KaraokeTextFileModel duetModel = DuettCreator.CreateDuett(models, voiceNames);
+
+                        // Serialize the duet model to a string
+                        string duetText = duetModel.GetText();
+
+                        // Convert the string to a MemoryStream
+                        MemoryStream duetStream = new MemoryStream(Encoding.UTF8.GetBytes(duetText));
+
+                        // Create a new PartModel for the duet
+                        PartModel duetPart = new PartModel
+                        {
+                            Name = part1.Name + " & " + part2.Name,
+                            FileData = duetStream
+                        };
+
+                        // Copy AudioTracks from part1 to duetPart
+                        foreach (var audioTrack in part1.AudioTracks)
+                        {
+                            duetPart.AudioTracks.Add(audioTrack);
+                        }
+
+                        // Add the new PartModel to the destination ProjectModel
+                        destination.Parts.Add(duetPart);
+                    }
                 }
             }
         }
