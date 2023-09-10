@@ -16,12 +16,13 @@ namespace UltraStarPermutator
                     // Clone source to modelToPermutate
                     modelToPermutate = Serializer.DeepCopyWithXml(projectModel);
 
-                    // TODO: Create duettes in modelToPermutate
+                    // Create duettes in modelToPermutate
+                    CreateDuettes(projectModel, modelToPermutate);
                 }
 
                 foreach (PartModel? part in modelToPermutate.Parts)
                 {
-                    if (part != null)
+                    if (part != null && part.HaveFileData()) // Använder HaveFileData
                     {
                         CreatePartPermutation(part, modelToPermutate);
                     }
@@ -29,13 +30,12 @@ namespace UltraStarPermutator
             }
         }
 
-
-
         private static void CreatePartPermutation(PartModel part, ProjectModel projectModel)
         {
-            if (part != null && File.Exists(part.FilePath) && Directory.Exists(projectModel.TagetFolder) && !string.IsNullOrEmpty(projectModel.Name))
+            if (part != null && part.HaveFileData() && Directory.Exists(projectModel.TagetFolder) && !string.IsNullOrEmpty(projectModel.Name)) // Använder HaveFileData
             {
-                KaraokeTextFileModel karaokeTextFileModel = new KaraokeTextFileModel(File.ReadAllText(part.FilePath));
+                string fileContent = part.ReadFileData(); // Använder ReadFileData
+                KaraokeTextFileModel karaokeTextFileModel = new KaraokeTextFileModel(fileContent);
 
                 foreach (var audio in part.AudioTracks)
                 {
@@ -62,27 +62,27 @@ namespace UltraStarPermutator
             }
         }
 
-        //private static void CreateDuettes(ProjectModel source, ProjectModel destination)
-        //{
-        //    var partModels = source.Parts.ToArray();
+        private static void CreateDuettes(ProjectModel source, ProjectModel destination)
+        {
+            var partModels = source.Parts.ToArray();
 
-        //    for (int i = 0; i < partModels.Length; i++)
-        //    {
-        //        for (int j = i + 1; j < partModels.Length; j++)
-        //        {
-        //            // Create a new ProjectModel for the duet
-        //            ProjectModel duetProjectModel = Serializer.DeepCopyWithXml(source);
+            for (int i = 0; i < partModels.Length; i++)
+            {
+                for (int j = i + 1; j < partModels.Length; j++)
+                {
+                    // Create a new ProjectModel for the duet
+                    ProjectModel duetProjectModel = Serializer.DeepCopyWithXml(source);
 
-        //            // Clear existing parts and add only the two parts for the duet
-        //            duetProjectModel.Parts.Clear();
-        //            duetProjectModel.Parts.Add(partModels[i]);
-        //            duetProjectModel.Parts.Add(partModels[j]);
+                    // Clear existing parts and add only the two parts for the duet
+                    duetProjectModel.Parts.Clear();
+                    duetProjectModel.Parts.Add(partModels[i]);
+                    duetProjectModel.Parts.Add(partModels[j]);
 
-        //            // Create the duet
-        //            DuettCreator.CreateDuett(duetProjectModel);
-        //        }
-        //    }
-        //}
+                    // Create the duet
+                    DuettCreator.Create(duetProjectModel);
+                }
+            }
+        }
 
         private static void CopyAndReferenceFile(string? wantedFileName, ProjectModel projectModel, KaraokeTextFileModel karaokeTextFileModel, string? sourceFilePath, Tag tag)
         {

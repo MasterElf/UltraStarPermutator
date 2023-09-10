@@ -18,9 +18,10 @@ namespace UltraStarPermutator
 
                 foreach (PartModel? part in projectModel.Parts)
                 {
-                    if (part != null && File.Exists(part.FilePath))
+                    if (part != null && part.HaveFileData()) // Använder HaveFileData
                     {
-                        KaraokeTextFileModel model = new KaraokeTextFileModel(File.ReadAllText(part.FilePath));
+                        string fileContent = part.ReadFileData(); // Använder ReadFileData
+                        KaraokeTextFileModel model = new KaraokeTextFileModel(fileContent);
                         models.Add(model);
                         //voiceNames.Add(part.Name ?? "Unknown");
                         voiceNames.Add("P" + partNbr++);
