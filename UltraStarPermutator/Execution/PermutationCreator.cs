@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SkiaSharp;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -50,7 +51,8 @@ namespace UltraStarPermutator
                         CopyAndReferenceFile(projectModel.Name + " - " + part.Name + " - " + audio.Name + ".mp3", projectModel, karaokeTextFileModel, audio.FilePath, Tag.MP3);
 
                         // Set correct #BACKGROUND
-                        CopyAndReferenceFile(Path.GetFileName(projectModel.BackgroundFilePath), projectModel, karaokeTextFileModel, projectModel.BackgroundFilePath, Tag.BACKGROUND);
+                        AddTextAndSaveImage(projectModel.Name + " - " + part.Name + " - " + audio.Name + ".png", projectModel, karaokeTextFileModel, projectModel.BackgroundFilePath, Tag.BACKGROUND);
+                        //CopyAndReferenceFile(Path.GetFileName(projectModel.BackgroundFilePath), projectModel, karaokeTextFileModel, projectModel.BackgroundFilePath, Tag.BACKGROUND);
 
                         // Set correct #COVER
                         CopyAndReferenceFile(Path.GetFileName(projectModel.CoverFilePath), projectModel, karaokeTextFileModel, projectModel.CoverFilePath, Tag.COVER);
@@ -122,11 +124,51 @@ namespace UltraStarPermutator
             {
                 karaokeTextFileModel.SetTag(tag, wantedFileName);
 
-                // Copy mp3 file
                 if (File.Exists(sourceFilePath))
                 {
                     string destinationAudioFile = Path.Combine(projectModel.TagetFolder, wantedFileName);
                     File.Copy(sourceFilePath, destinationAudioFile, true);
+                }
+            }
+        }
+
+        private static void AddTextAndSaveImage(string? wantedFileName, ProjectModel? projectModel, KaraokeTextFileModel karaokeTextFileModel, string? sourceFilePath, Tag tag)
+        {
+            if (projectModel != null &&
+                karaokeTextFileModel != null &&
+                !string.IsNullOrEmpty(wantedFileName) &&
+                !string.IsNullOrEmpty(projectModel.TagetFolder))
+            {
+                karaokeTextFileModel.SetTag(tag, wantedFileName);
+
+                if (File.Exists(sourceFilePath))
+                {
+                    string destinationImageFile = Path.Combine(projectModel.TagetFolder, wantedFileName);
+
+                    using (SKBitmap srcBitmap = SKBitmap.Decode(sourceFilePath))
+                    {
+                        using (SKCanvas canvas = new SKCanvas(srcBitmap))
+                        {
+                            SKPaint paint = new SKPaint
+                            {
+                                Color = SKColors.White,
+                                IsAntialias = true,
+                                Style = SKPaintStyle.Fill,
+                                TextAlign = SKTextAlign.Center,
+                                TextSize = 240
+                            };
+
+                            float x = srcBitmap.Width / 2;
+                            float y = srcBitmap.Height / 2;
+
+                            canvas.DrawText("Your Text Here", x, y, paint);
+                        }
+
+                        using (SKFileWStream outStream = new SKFileWStream(destinationImageFile))
+                        {
+                            SKPixmap.Encode(outStream, srcBitmap, SKEncodedImageFormat.Png, 100);
+                        }
+                    }
                 }
             }
         }
