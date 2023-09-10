@@ -20,7 +20,7 @@ namespace UltraStarPermutator
                 {
                     if (part != null && File.Exists(part.FilePath))
                     {
-                        KaraokeTextFileModel model = ReadKaraokeTextFileModelFromFile(part.FilePath);
+                        KaraokeTextFileModel model = new KaraokeTextFileModel(File.ReadAllText(part.FilePath));
                         models.Add(model);
                         //voiceNames.Add(part.Name ?? "Unknown");
                         voiceNames.Add("P" + partNbr++);
@@ -34,11 +34,6 @@ namespace UltraStarPermutator
                 string destinationTextFile = Path.Combine(projectModel.TagetFolder, textFileName);
                 File.WriteAllText(destinationTextFile, duettModel.GetText());
             }
-        }
-
-        private static KaraokeTextFileModel ReadKaraokeTextFileModelFromFile(string filePath)
-        {
-            return new KaraokeTextFileModel(File.ReadAllText(filePath));
         }
 
         public static KaraokeTextFileModel CreateDuett(List<KaraokeTextFileModel> models, List<string> voiceNames)

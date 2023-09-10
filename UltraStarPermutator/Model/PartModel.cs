@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Xml.Serialization;
 
 namespace UltraStarPermutator
@@ -23,6 +24,9 @@ namespace UltraStarPermutator
             get => filePath;
             set => SetProperty(ref filePath, value);
         }
+
+        [XmlIgnore] // Detta attribut ser till att MemoryStream ignoreras vid serialisering
+        public MemoryStream? FileData { get; set; }
 
         [XmlIgnore]
         public ObservableCollection<AudioModel> AudioTracks { get; private set; } = new ObservableCollection<AudioModel>();

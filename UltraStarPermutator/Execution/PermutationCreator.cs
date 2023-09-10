@@ -1,6 +1,5 @@
 ﻿using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
+using System.Linq;
 
 namespace UltraStarPermutator
 {
@@ -14,7 +13,7 @@ namespace UltraStarPermutator
 
                 if (projectModel.CreateDuettes)
                 {
-                    // Clone projectModel to modelToPermutate
+                    // Clone source to modelToPermutate
                     modelToPermutate = Serializer.DeepCopyWithXml(projectModel);
 
                     // TODO: Create duettes in modelToPermutate
@@ -29,6 +28,8 @@ namespace UltraStarPermutator
                 }
             }
         }
+
+
 
         private static void CreatePartPermutation(PartModel part, ProjectModel projectModel)
         {
@@ -60,6 +61,28 @@ namespace UltraStarPermutator
                 }
             }
         }
+
+        //private static void CreateDuettes(ProjectModel source, ProjectModel destination)
+        //{
+        //    var partModels = source.Parts.ToArray();
+
+        //    for (int i = 0; i < partModels.Length; i++)
+        //    {
+        //        for (int j = i + 1; j < partModels.Length; j++)
+        //        {
+        //            // Create a new ProjectModel for the duet
+        //            ProjectModel duetProjectModel = Serializer.DeepCopyWithXml(source);
+
+        //            // Clear existing parts and add only the two parts for the duet
+        //            duetProjectModel.Parts.Clear();
+        //            duetProjectModel.Parts.Add(partModels[i]);
+        //            duetProjectModel.Parts.Add(partModels[j]);
+
+        //            // Create the duet
+        //            DuettCreator.CreateDuett(duetProjectModel);
+        //        }
+        //    }
+        //}
 
         private static void CopyAndReferenceFile(string? wantedFileName, ProjectModel projectModel, KaraokeTextFileModel karaokeTextFileModel, string? sourceFilePath, Tag tag)
         {
