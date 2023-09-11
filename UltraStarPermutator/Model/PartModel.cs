@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text; // För att använda Encoding
@@ -10,28 +11,37 @@ namespace UltraStarPermutator;
 [Serializable]
 public class PartModel : ObservableObject
 {
-    private string? name;
+    private string? _name;
 
     public string? Name
     {
-        get => name;
-        set => SetProperty(ref name, value);
+        get => _name;
+        set => SetProperty(ref _name, value);
     }
 
-    private string? filePath;
+    private string? _filePath;
 
     public string? FilePath
     {
-        get => filePath;
-        set => SetProperty(ref filePath, value);
+        get => _filePath;
+        set => SetProperty(ref _filePath, value);
     }
 
-    private bool assertTrailingSpace;
+    private bool _assertTrailingSpace;
 
     public bool AssertTrailingSpace
     {
-        get => assertTrailingSpace;
-        set => SetProperty(ref assertTrailingSpace, value);
+        get => _assertTrailingSpace;
+        set => SetProperty(ref _assertTrailingSpace, value);
+    }
+
+    private List<string>? _temporaryDuetNames;
+
+    [XmlIgnore]
+    public List<string>? TemporaryDuetNames
+    {
+        get => _temporaryDuetNames;
+        set => SetProperty(ref _temporaryDuetNames, value);
     }
 
     [XmlIgnore] // Detta attribut ser till att MemoryStream ignoreras vid serialisering

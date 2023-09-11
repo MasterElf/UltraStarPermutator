@@ -55,8 +55,16 @@ namespace UltraStarPermutator
                             projectModel, karaokeTextFileModel, audio.FilePath, Tag.MP3);
 
                         // Set correct #BACKGROUND
+                        string topText = part.Name ?? "Unknown";
+                        string bottomText = "";
+                        if (part.TemporaryDuetNames?.Count >= 2)
+                        {
+                            topText = part.TemporaryDuetNames[0];
+                            bottomText = part.TemporaryDuetNames[1];
+                        }
+
                         AddTextAndSaveImage(projectModel.Name + " - " + part.Name + " - " + audio.Name + ".png",
-                            projectModel, karaokeTextFileModel, projectModel.BackgroundFilePath, Tag.BACKGROUND, 16.0/9, "P1", "P2");
+                            projectModel, karaokeTextFileModel, projectModel.BackgroundFilePath, Tag.BACKGROUND, 16.0/9, topText, bottomText);
                         //CopyAndReferenceFile(Path.GetFileName(projectModel.BackgroundFilePath), projectModel, karaokeTextFileModel, projectModel.BackgroundFilePath, Tag.BACKGROUND);
 
                         // Set correct #COVER
@@ -107,7 +115,8 @@ namespace UltraStarPermutator
                         PartModel duetPart = new PartModel
                         {
                             Name = part1.Name + " & " + part2.Name,
-                            FileData = duetStream
+                            FileData = duetStream,
+                            TemporaryDuetNames = new List<string> { part1.Name ?? "P1", part2.Name ?? "P2" }
                         };
 
                         // Copy AudioTracks from part1 to duetPart
@@ -184,9 +193,18 @@ namespace UltraStarPermutator
 
                         using (SKCanvas canvas = new SKCanvas(croppedBitmap))
                         {
-                            SKPaint paint = new SKPaint
+                            SKPaint bluePaint = new SKPaint
                             {
-                                Color = SKColors.White,
+                                Color = SKColors.Blue,
+                                IsAntialias = true,
+                                Style = SKPaintStyle.Fill,
+                                TextAlign = SKTextAlign.Left,
+                                TextSize = 240
+                            };
+
+                            SKPaint redPaint = new SKPaint
+                            {
+                                Color = SKColors.Red,
                                 IsAntialias = true,
                                 Style = SKPaintStyle.Fill,
                                 TextAlign = SKTextAlign.Left,
@@ -207,30 +225,42 @@ namespace UltraStarPermutator
                             // Draw shadow
                             SKPaint shadowPaint = new SKPaint
                             {
-                                Color = SKColors.Gray,
+                                Color = new SKColor(0, 0, 0, 128), // Transparent black
                                 IsAntialias = true,
                                 Style = SKPaintStyle.Fill,
                                 TextAlign = SKTextAlign.Left,
                                 TextSize = 240
                             };
 
+                            // Hämta fontens metrik
+                            SKFontMetrics metrics;
+                            bluePaint.GetFontMetrics(out metrics);
+
+                            // Beräkna textens totala höjd
+                            float textHeight = metrics.Descent - metrics.Ascent;
+
                             float xPos = 10;
+                            float yCenter = croppedBitmap.Height / 2.0f;
+                            float yTopText = yCenter - 30;
+                            float yBottomText = yCenter + 30 + textHeight;
+                            float yShadowOffset = 20;
+                            float xShadowOffset = 10;
 
                             // Draw top-left text
-                            canvas.DrawText(topLeftText, xPos, 250 + 5, shadowPaint);
-                            canvas.DrawText(topLeftText, xPos, 250, outlinePaint);
-                            canvas.DrawText(topLeftText, xPos, 250, paint);
+                            canvas.DrawText(topLeftText, xPos + xShadowOffset, yTopText + yShadowOffset, shadowPaint);
+                            canvas.DrawText(topLeftText, xPos, yTopText, outlinePaint);
+                            canvas.DrawText(topLeftText, xPos, yTopText, bluePaint);
 
                             // Draw bottom-center text
                             //float x = croppedBitmap.Width / 2;
-                            float y = croppedBitmap.Height - 100;
+                            //float y = croppedBitmap.Height - 100;
 
-                            paint.TextAlign = SKTextAlign.Center;
-                            outlinePaint.TextAlign = SKTextAlign.Center;
+                            //paint.TextAlign = SKTextAlign.Center;
+                            //outlinePaint.TextAlign = SKTextAlign.Center;
 
-                            canvas.DrawText(bottomCenterText, xPos, y + 5, shadowPaint);
-                            canvas.DrawText(bottomCenterText, xPos, y, outlinePaint);
-                            canvas.DrawText(bottomCenterText, xPos, y, paint);
+                            canvas.DrawText(bottomCenterText, xPos + xShadowOffset, yBottomText + yShadowOffset, shadowPaint);
+                            canvas.DrawText(bottomCenterText, xPos, yBottomText, outlinePaint);
+                            canvas.DrawText(bottomCenterText, xPos, yBottomText, redPaint);
                         }
 
                         using (SKFileWStream outStream = new SKFileWStream(destinationImageFile))
