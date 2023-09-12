@@ -64,7 +64,7 @@ namespace UltraStarPermutator
                         }
 
                         AddTextAndSaveImage(projectModel.Name + " - " + part.Name + " - " + audio.Name + ".png",
-                            projectModel, karaokeTextFileModel, projectModel.BackgroundFilePath, Tag.BACKGROUND, 16.0/9, topText, bottomText);
+                            projectModel, karaokeTextFileModel, projectModel.BackgroundFilePath, Tag.BACKGROUND, 1920.0/1080, topText, bottomText);
                         //CopyAndReferenceFile(Path.GetFileName(projectModel.BackgroundFilePath), projectModel, karaokeTextFileModel, projectModel.BackgroundFilePath, Tag.BACKGROUND);
 
                         // Set correct #COVER
@@ -187,7 +187,7 @@ namespace UltraStarPermutator
                         }
 
                         // Create a new cropped bitmap
-                        SKRectI cropRect = new SKRectI(0, 0, newWidth, newHeight);
+                        SKRectI cropRect = new SKRectI((srcBitmap.Width - newWidth) / 2, (srcBitmap.Height-newHeight)/2, newWidth, newHeight);
                         SKBitmap croppedBitmap = new SKBitmap(cropRect.Width, cropRect.Height);
                         srcBitmap.ExtractSubset(croppedBitmap, cropRect);
 

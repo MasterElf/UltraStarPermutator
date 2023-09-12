@@ -87,7 +87,7 @@ namespace UltraStarPermutator
             {
                 // Open load dialogue
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Filter = "Jpeg|*.jpg|Png|*.png";
+                openFileDialog.Filter = "Jpeg|*.jpg;*.jpeg|Png|*.png|Bitmap|*.bmp|Gif|*.gif|Tiff|*.tif;*.tiff";
                 openFileDialog.DefaultExt = "jpg";
                 openFileDialog.CheckPathExists = true;
                 openFileDialog.CheckFileExists = true;
