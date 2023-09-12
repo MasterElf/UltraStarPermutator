@@ -187,7 +187,7 @@ namespace UltraStarPermutator
                         }
 
                         // Create a new cropped bitmap
-                        SKRectI cropRect = new SKRectI((srcBitmap.Width - newWidth) / 2, (srcBitmap.Height-newHeight)/2, newWidth, newHeight);
+                        SKRectI cropRect = new SKRectI((srcBitmap.Width - newWidth) / 2, (srcBitmap.Height-newHeight)/2, (srcBitmap.Width - newWidth) / 2 + newWidth, (srcBitmap.Height - newHeight) / 2 + newHeight);
                         SKBitmap croppedBitmap = new SKBitmap(cropRect.Width, cropRect.Height);
                         srcBitmap.ExtractSubset(croppedBitmap, cropRect);
 
@@ -195,19 +195,19 @@ namespace UltraStarPermutator
                         {
                             SKPaint bluePaint = new SKPaint
                             {
-                                Color = SKColors.Blue,
+                                Color = new SKColor(1, 174, 234, 255), // Babyblue
                                 IsAntialias = true,
                                 Style = SKPaintStyle.Fill,
-                                TextAlign = SKTextAlign.Left,
+                                TextAlign = SKTextAlign.Right,
                                 TextSize = 240
                             };
 
                             SKPaint redPaint = new SKPaint
                             {
-                                Color = SKColors.Red,
+                                Color = new SKColor(232, 2, 2, 255), // Red
                                 IsAntialias = true,
                                 Style = SKPaintStyle.Fill,
-                                TextAlign = SKTextAlign.Left,
+                                TextAlign = SKTextAlign.Right,
                                 TextSize = 240
                             };
 
@@ -218,7 +218,7 @@ namespace UltraStarPermutator
                                 IsAntialias = true,
                                 Style = SKPaintStyle.Stroke,
                                 StrokeWidth = 4,
-                                TextAlign = SKTextAlign.Left,
+                                TextAlign = SKTextAlign.Right,
                                 TextSize = 240
                             };
 
@@ -228,7 +228,7 @@ namespace UltraStarPermutator
                                 Color = new SKColor(0, 0, 0, 128), // Transparent black
                                 IsAntialias = true,
                                 Style = SKPaintStyle.Fill,
-                                TextAlign = SKTextAlign.Left,
+                                TextAlign = SKTextAlign.Right,
                                 TextSize = 240
                             };
 
@@ -239,10 +239,10 @@ namespace UltraStarPermutator
                             // Beräkna textens totala höjd
                             float textHeight = metrics.Descent - metrics.Ascent;
 
-                            float xPos = 10;
+                            float xPos = croppedBitmap.Width * 0.84f;
                             float yCenter = croppedBitmap.Height / 2.0f;
-                            float yTopText = yCenter - 30;
-                            float yBottomText = yCenter + 30 + textHeight;
+                            float yTopText = croppedBitmap.Height * 0.23f;
+                            float yBottomText = croppedBitmap.Height * 0.52f;
                             float yShadowOffset = 20;
                             float xShadowOffset = 10;
 
